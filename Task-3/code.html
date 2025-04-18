@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vishnu's Portfolio</title>
+  <style>
+    body {
+      font-family: Comic Sans MS, sans-serif;
+      background: #f0f8ff;
+      color: #333;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1, h2 {
+      color: #0077cc;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 10px;
+      border: none;
+      background: #00aaff;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0077cc;
+    }
+
+    img {
+      max-width: 90%;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .box {
+      background: pink;
+      font-size: 30px;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 15px;
+      width: 80%;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 600px) {
+      .box {
+        font-size: 18px;
+        background: lightblue;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>👋 Hello! I'm Vishnu</h1>
+  <div class="box">Welcome to My Simple Portfolio</div>
+
+  <!-- Project Carousel -->
+  <h2>🧑‍💻 My Projects</h2>
+  <img id="projectImg" src="t-3.png" alt="Project Image">
+  <br>
+  <button onclick="prev()">⬅️ Previous</button>
+  <button onclick="next()">➡️ Next</button>
+
+  <!-- Joke Section -->
+  <h2>😂 Joke Time!</h2>
+  <p id="joke">Loading a funny joke...</p>
+  <button onclick="getJoke()">Tell Me Another!</button>
+
+  <script>
+    // 🎠 Carousel Logic
+    let images = [
+      "t-3.png",
+      "t-2.png",
+      "t-1.png"
+    ];
+    let current = 0;
+
+    function show() {
+      document.getElementById("projectImg").src = images[current];
+    }
+
+    function next() {
+      current = (current + 1) % images.length;
+      show();
+    }
+
+    function prev() {
+      current = (current - 1 + images.length) % images.length;
+      show();
+    }
+
+    show(); // Show first image on load
+
+    // 😂 Joke Fetcher
+    async function getJoke() {
+      const res = await fetch("https://icanhazdadjoke.com/", {
+        headers: { Accept: "application/json" }
+      });
+      const data = await res.json();
+      document.getElementById("joke").textContent = data.joke;
+    }
+
+    getJoke(); // Load first joke
+  </script>
+
+</body>
+</html>

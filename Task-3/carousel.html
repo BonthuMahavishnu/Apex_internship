@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Image Carousel</title>
+  <style>
+    body {
+      font-family: Comic Sans MS, sans-serif;
+      background: #fff8f0;
+      text-align: center;
+      padding: 40px;
+    }
+
+    img {
+      max-width: 90%;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 10px;
+      border: none;
+      background: #00aaff;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0077cc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1> Image Carousel</h1>
+  <img id="projectImg" src="t-3.png" alt="Project Image">
+  <br>
+  <button onclick="prev()">⬅️ Previous</button>
+  <button onclick="next()">➡️ Next</button>
+
+  <script>
+    let images = ["t-3.png", "t-2.png", "t-1.png"];
+    let current = 0;
+
+    function show() {
+      document.getElementById("projectImg").src = images[current];
+    }
+
+    function next() {
+      current = (current + 1) % images.length;
+      show();
+    }
+
+    function prev() {
+      current = (current - 1 + images.length) % images.length;
+      show();
+    }
+
+    show(); // load first image
+  </script>
+
+</body>
+</html>

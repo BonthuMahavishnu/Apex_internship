@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Joke Teller</title>
+  <style>
+    body {
+      font-family: Comic Sans MS, sans-serif;
+      background-color: #e0f7fa;
+      text-align: center;
+      padding: 40px;
+    }
+
+    p {
+      font-size: 24px;
+      margin: 20px;
+      color: #00796b;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 18px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #004c99;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Joke Generator</h1>
+  <p id="joke">Loading a funny joke...</p>
+  <button onclick="getJoke()">Tell Me Another!</button>
+
+  <script>
+    async function getJoke() {
+      const res = await fetch("https://icanhazdadjoke.com/", {
+        headers: { Accept: "application/json" }
+      });
+      const data = await res.json();
+      document.getElementById("joke").textContent = data.joke;
+    }
+
+    getJoke(); // Load first joke
+  </script>
+
+</body>
+</html>

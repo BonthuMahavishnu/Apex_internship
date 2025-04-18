@@ -1,0 +1,20 @@
+body {
+  font-family: Comic Sans MS, sans-serif;
+  background: #fefefe;
+  color: #333;
+  padding: 20px;
+  text-align: center;
+}
+button {
+  padding: 10px 20px;
+  font-size: 18px;
+  margin: 10px;
+  border: none;
+  background: #00aaff;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+button:hover {
+  background: #0077cc;
+}
