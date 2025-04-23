@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vishnu's Portfolio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #f0f2f5, #eaf6ff);
+      color: #333;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 10%;
+      background-color: #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo img {
+      height: 50px;
+    }
+
+    nav a {
+      margin-left: 25px;
+      text-decoration: none;
+      font-size: 1rem;
+      color: #333;
+      font-weight: 500;
+      position: relative;
+    }
+
+    nav a::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 2px;
+      background: #3498db;
+      transition: 0.4s;
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+    }
+
+    nav a:hover::after,
+    nav a.active::after {
+      width: 100%;
+    }
+
+    .intro {
+      text-align: center;
+      padding: 80px 20px;
+      background: linear-gradient(to right, #dfefff, #ffffff);
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .intro h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    .intro p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      color: #555;
+    }
+
+    .cta-btn {
+      padding: 15px 45px;
+      background-color: #3498db;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 30px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .cta-btn:hover {
+      background-color: #2980b9;
+      transform: scale(1.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px 10px;
+      background-color: #f8f9fa;
+      color: #777;
+      font-size: 0.9rem;
+      margin-top: 80px;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav {
+        margin-top: 10px;
+      }
+
+      nav a {
+        display: block;
+        margin: 10px 0;
+      }
+
+      .intro h1 {
+        font-size: 2.2rem;
+      }
+
+      .intro p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="Screenshot 2025-04-23 122828.png" alt="BAMV Logo">
+    </div>
+    
+    <nav>
+      <a href="index.html" class="active">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+<div class = "intro">
+  <section class="intro">
+    <h1>Hi, I'm Maha Vishnu👋</h1>
+    <h2 style="font-family: 'Poppins', sans-serif;">
+      Passionate about web development, I specialize in designing creative and efficient web solutions tailored for real-world impact.
+    </h2>
+    
+    <!-- <a href="projects.html" class="cta-btn">🚀 View My Projects</a> -->
+  </section>
+</div>
+
+  <footer>
+    <p>© 2025 Vishnu. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

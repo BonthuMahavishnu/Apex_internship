@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Adv To-Do List App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+      position: relative; /* for absolutely positioned children */
+    }
+
+    /* Back button styling */
+    #backBtn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 8px 12px;
+      font-size: 14px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    #backBtn:hover {
+      background-color: #0056b3;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-top: 60px; /* push it down to clear back button */
+    }
+
+    #taskInput, select, button {
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    #taskInput {
+      width: 60%;
+    }
+
+    button.add-btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button.add-btn:hover {
+      background-color: #218838;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: white;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-left: 5px solid #007bff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .category {
+      font-size: 12px;
+      font-style: italic;
+      color: gray;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back Button -->
+  <button id="backBtn" onclick="goBack()">← Back</button>
+
+  <h1>Adv To-Do List</h1>
+
+  <input type="text" id="taskInput" placeholder="Add a task" />
+  <select id="categorySelect">
+    <option value="work">Work</option>
+    <option value="personal">Personal</option>
+  </select>
+  <button class="add-btn" onclick="addTask()">Add Task</button>
+
+  <div>
+    <label for="filter">Filter by Category:</label>
+    <select id="filter" onchange="filterTasks()">
+      <option value="all">All</option>
+      <option value="work">Work</option>
+      <option value="personal">Personal</option>
+    </select>
+  </div>
+
+  <ul id="taskList"></ul>
+
+  <script>
+    // Navigate back in browser history
+    function goBack() {
+      window.history.back();
+    }
+
+    let tasks = JSON.parse(localStorage.getItem('advancedTasks')) || [];
+
+    function saveTasks() {
+      localStorage.setItem('advancedTasks', JSON.stringify(tasks));
+    }
+
+    function renderTasks(filtered = 'all') {
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = '';
+
+      const filteredTasks = filtered === 'all'
+        ? tasks
+        : tasks.filter(task => task.category === filtered);
+
+      filteredTasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <div>
+            ${task.text}
+            <div class="category">Category: ${task.category}</div>
+          </div>
+          <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
+        `;
+        taskList.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const input = document.getElementById('taskInput');
+      const category = document.getElementById('categorySelect').value;
+      const taskText = input.value.trim();
+
+      if (taskText !== '') {
+        tasks.push({ text: taskText, category });
+        saveTasks();
+        input.value = '';
+        renderTasks(document.getElementById('filter').value);
+      }
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      saveTasks();
+      renderTasks(document.getElementById('filter').value);
+    }
+
+    function filterTasks() {
+      const filter = document.getElementById('filter').value;
+      renderTasks(filter);
+    }
+
+    // Initial render
+    renderTasks();
+  </script>
+</body>
+</html>
