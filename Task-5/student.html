@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Report Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f8;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-bottom: 20px;
+      background-color: #3498db;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .back-button:hover {
+      background-color: #2c80b4;
+    }
+
+    .student-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .student-card {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .student-card h3 {
+      margin: 0 0 10px;
+      color: #3498db;
+    }
+
+    .status {
+      font-weight: bold;
+      color: #27ae60;
+    }
+
+    .status.fail {
+      color: #e74c3c;
+    }
+
+    canvas {
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="projects.html" class="back-button">← Back to Projects</a>
+    <h1>Student Report Dashboard</h1>
+
+    <div class="student-grid" id="studentGrid"></div>
+
+    <canvas id="gradeChart" height="100"></canvas>
+  </div>
+
+  <script>
+    const students = [
+      {
+        name: "Madhava",
+        class: "10_A",
+        grades: { Math: 85, physics: 78, chemistry: 92 },
+      },
+      {
+        name: "hemanth",
+        class: "10_B",
+        grades: { Math: 75, physics: 70, chemistry: 68 },
+      },
+      {
+        name: "Yum_Jam",
+        class: "10_A",
+        grades: { Math: 90, physics: 88, chemistry: 94 },
+      },
+      {
+        name: "Tej",
+        class: "10_A+",
+        grades: { Math: 70, physics: 52, chemistry: 77 },
+      },
+      {
+        name: "Visu",
+        class: "10_A",
+        grades: { Math: 70, physics: 52, chemistry: 77 },
+      }
+    ];
+
+    const studentGrid = document.getElementById("studentGrid");
+
+    students.forEach(student => {
+      const avg =
+        Object.values(student.grades).reduce((a, b) => a + b, 0) /
+        Object.keys(student.grades).length;
+      const status = avg >= 60 ? "pass" : "fail";
+
+      const card = document.createElement("div");
+      card.className = "student-card";
+      card.innerHTML = `
+        <h3>${student.name}</h3>
+        <p><strong>Class:</strong> ${student.class}</p>
+        <p><strong>Math:</strong> ${student.grades.Math}</p>
+        <p><strong>Physics:</strong> ${student.grades.physics}</p>
+        <p><strong>Chemistry:</strong> ${student.grades.chemistry}</p>
+        <p class="status ${status === 'fail' ? 'fail' : ''}">
+          Status: ${status === 'fail' ? 'Fail' : 'Pass'}
+        </p>
+      `;
+      studentGrid.appendChild(card);
+    });
+
+    const avgGrades = students.reduce(
+      (acc, student) => {
+        acc.Math += student.grades.Math;
+        acc.physics += student.grades.physics;
+        acc.chemistry += student.grades.chemistry;
+        return acc;
+      },
+      { Math: 0, physics: 0, chemistry: 0 }
+    );
+
+    const numStudents = students.length;
+    const chart = new Chart(document.getElementById("gradeChart"), {
+      type: "bar",
+      data: {
+        labels: ["Math", "physics", "chemistry"],
+        datasets: [
+          {
+            label: "Average Grade",
+            backgroundColor: ["#3498db", "#2ecc71", "#f39c12"],
+            data: [
+              avgGrades.Math / numStudents,
+              avgGrades.physics / numStudents,
+              avgGrades.chemistry / numStudents,
+            ],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+          },
+        },
+      },
+    });
+  </script>
+</body>
+</html>

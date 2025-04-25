@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Text Summary Tool</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 40px;
+      color: #2c3e50;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background-color: #e2e8f0;
+      color: #2c3e50;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #d1d9e6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      padding: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 160px;
+      padding: 14px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      margin-bottom: 10px;
+    }
+
+    input[type="file"] {
+      margin: 20px 0;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background-color: #2c80b4;
+    }
+
+    .output,
+    .meta,
+    .explanation {
+      margin-top: 30px;
+      background: #f9fafb;
+      padding: 20px;
+      border-left: 4px solid #3498db;
+      border-radius: 6px;
+    }
+
+    .meta {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .tabs {
+      display: flex;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .tab-btn {
+      padding: 8px 14px;
+      background: #e2e8f0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .tab-btn.active {
+      background: #3498db;
+      color: #fff;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="projects.html" class="back-btn">← Back to Projects</a>
+
+  <div class="container">
+    <h1>AI Text Summary & Explanation Tool</h1>
+
+    <input type="file" id="pdfUpload" accept="application/pdf" />
+    <textarea id="inputText" placeholder="Paste text or upload a PDF..."></textarea>
+    <button class="btn" onclick="generateSummary()">Summarize</button>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('summary')">Summary</button>
+      <button class="tab-btn" onclick="showTab('explanation')">Explanation</button>
+      <button class="tab-btn" onclick="showTab('meta')">Stats</button>
+    </div>
+
+    <div id="summaryOutput" class="output"></div>
+    <div id="explanationOutput" class="output explanation hidden"></div>
+    <div id="metaOutput" class="output meta hidden"></div>
+  </div>
+
+  <script>
+    function cleanText(text) {
+      return text
+        .replace(/\s+/g, ' ')
+        .replace(/(Page \d+ of \d+)/gi, '')
+        .replace(/\n+/g, ' ')
+        .replace(/[^\w\s.,!?\-]/g, '')
+        .trim();
+    }
+
+    function generateSummary() {
+      const inputRaw = document.getElementById('inputText').value.trim();
+      const cleaned = cleanText(inputRaw);
+      const summaryBox = document.getElementById('summaryOutput');
+      const metaBox = document.getElementById('metaOutput');
+      const explanationBox = document.getElementById('explanationOutput');
+
+      if (!cleaned) {
+        alert('Please paste some valid text or upload a PDF.');
+        return;
+      }
+
+      const sentences = cleaned.match(/[^.!?]+[.!?]+/g) || [];
+      const summarySentences = sentences.filter((s, i) => i % 3 === 0).slice(0, 6);
+      const summary = summarySentences.join(' ');
+
+      summaryBox.textContent = summary;
+
+      explanationBox.innerHTML =
+        '<strong>Explanation:</strong><ul>' +
+        summarySentences
+          .map(
+            (sent) =>
+              `<li><strong>${sent.trim()}</strong><br><em>This point highlights a key idea from the original content.</em></li>`
+          )
+          .join('') +
+        '</ul>';
+
+      metaBox.innerHTML = `
+        <strong>Word Count:</strong> ${cleaned.split(/\s+/).length} &nbsp;|&nbsp;
+        <strong>Character Count:</strong> ${cleaned.length} &nbsp;|&nbsp;
+        <strong>Estimated Reading Time:</strong> ${(cleaned.split(/\s+/).length / 200).toFixed(1)} min`;
+    }
+
+    function showTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach((btn) => btn.classList.remove('active'));
+      document.querySelectorAll('.output').forEach((box) => box.classList.add('hidden'));
+      document.querySelector(`[onclick*="${tab}"]`).classList.add('active');
+      document.getElementById(`${tab}Output`).classList.remove('hidden');
+    }
+
+    document.getElementById('pdfUpload').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (!file || file.type !== 'application/pdf') return alert('Please upload a valid PDF file.');
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const typedarray = new Uint8Array(this.result);
+        pdfjsLib.getDocument(typedarray).promise.then((pdf) => {
+          let textContent = '';
+          let promises = [];
+
+          for (let i = 1; i <= pdf.numPages; i++) {
+            promises.push(
+              pdf.getPage(i).then((page) =>
+                page.getTextContent().then((text) => {
+                  textContent += text.items.map((item) => item.str).join(' ') + ' ';
+                })
+              )
+            );
+          }
+
+          Promise.all(promises).then(() => {
+            document.getElementById('inputText').value = cleanText(textContent.trim());
+          });
+        });
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  </script>
+</body>
+</html>
